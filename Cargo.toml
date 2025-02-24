@@ -1,0 +1,9 @@
+[package]
+name = "fractal_2025_01"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+bytemuck = "1.21.0"
+glam = { version = "0.30.0", features = ["bytemuck"] }
+iced = { version = "0.13.1", features = ["advanced"] }
