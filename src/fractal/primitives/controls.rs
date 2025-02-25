@@ -1,7 +1,7 @@
 use glam::Vec2;
 use iced::Rectangle;
 
-use super::constants::*;
+use crate::fractal::constants::*;
 
 #[derive(Debug, Clone, Copy)]
 pub struct Controls {

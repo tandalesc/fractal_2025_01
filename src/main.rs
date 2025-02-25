@@ -1,6 +1,6 @@
-mod system;
+mod fractal;
 
-use system::shader::FractalWidget;
+use crate::fractal::widget::FractalWidget;
 
 fn main() -> iced::Result {
     iced::run(

@@ -1,18 +1,7 @@
-use glam::Vec2;
 use iced::Rectangle;
 use iced::widget::shader::wgpu;
-use iced::widget::shader::{self, Viewport};
 
-use super::controls::Controls;
-
-#[derive(Copy, Clone, Debug, bytemuck::Pod, bytemuck::Zeroable)]
-#[repr(C)]
-pub struct Uniforms {
-    pub resolution: Vec2,
-    pub center: Vec2,
-    pub scale: f32,
-    pub max_iter: u32,
-}
+use super::uniforms::Uniforms;
 
 pub struct FragmentShaderPipeline {
     pipeline: wgpu::RenderPipeline,
@@ -112,60 +101,5 @@ impl FragmentShaderPipeline {
         pass.set_bind_group(0, &self.uniform_bind_group, &[]);
 
         pass.draw(0..3, 0..1);
-    }
-}
-
-#[derive(Debug)]
-pub struct FragmentShaderPrimitive {
-    controls: Controls,
-}
-
-impl FragmentShaderPrimitive {
-    pub fn new(controls: Controls) -> Self {
-        Self { controls }
-    }
-}
-
-impl shader::Primitive for FragmentShaderPrimitive {
-    fn prepare(
-        &self,
-        device: &wgpu::Device,
-        queue: &wgpu::Queue,
-        format: wgpu::TextureFormat,
-        storage: &mut shader::Storage,
-        _bounds: &Rectangle,
-        viewport: &Viewport,
-    ) {
-        let target_size = viewport.logical_size();
-        if !storage.has::<FragmentShaderPipeline>() {
-            storage.store(FragmentShaderPipeline::new(device, format));
-        }
-        if let Some(pipeline) = storage.get_mut::<FragmentShaderPipeline>() {
-            pipeline.update(
-                queue,
-                &Uniforms {
-                    resolution: Vec2::new(target_size.width as f32, target_size.height as f32),
-                    center: self.controls.center,
-                    scale: self.controls.scale(),
-                    max_iter: self.controls.max_iter,
-                },
-            );
-        } else {
-            panic!("Failed to prepare fragment shader");
-        }
-    }
-
-    fn render(
-        &self,
-        encoder: &mut wgpu::CommandEncoder,
-        storage: &shader::Storage,
-        target: &wgpu::TextureView,
-        clip_bounds: &Rectangle<u32>,
-    ) {
-        if let Some(pipeline) = storage.get::<FragmentShaderPipeline>() {
-            pipeline.render(target, encoder, *clip_bounds);
-        } else {
-            panic!("Failed to render fragment shader");
-        }
     }
 }
