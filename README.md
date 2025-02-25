@@ -27,6 +27,23 @@ This repository follows standard Rust processes.
   - Tools for dealing with repr(C) and casting between plain types.
   - Needed when passing data to shader.
 
+## Diagram
+
+```mermaid
+graph LR
+    A[Widget]
+    C[Program]
+    D[Primitive]
+    E[Pipeline]
+    F[Shader]
+
+    A --> |Events| C
+    C --> |Controls| D
+    D --> |Uniforms| E
+    E --> |Buffer| F
+    E --> |Render Pass| F
+```
+
 ## Planned Experiments
 
 ### Arbitrary Precision Fractal Generation
